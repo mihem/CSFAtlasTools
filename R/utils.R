@@ -15,3 +15,30 @@ count_category <- function(data, category) {
         dplyr::arrange(dplyr::desc(n)) |>
         readr::write_csv(file.path("analysis", "relative", "categories", glue::glue("count_{category}.csv")))
 }
+
+################################################################################
+# Date distance
+################################################################################
+
+#' @title Calculate the distance between two dates
+#' 
+#' @description Calculate the absolute difference between two dates in days
+#' 
+#' @param v1 first date
+#' @param v2 second date
+#' 
+#' @param max_dist maximum distance in days between the two dates
+#' 
+#' @return a data frame with a single column include indicating
+#' whether the distance is within the maximum distance
+#' 
+#' @export
+date_distance_fun <- function(v1, v2, max_dist = 1) {
+    # Calculate the absolute difference between the two dates in days
+    dist <- abs(as.double(difftime(v1, v2, units = "days")))
+    
+    # Create a data frame with a single column include indicating
+    # whether the distance is within the maximum distance
+    ret <- data.frame(include = (dist <= max_dist))
+    return(ret)
+}

@@ -2,5 +2,6 @@
 
 export(abundanceCategoryPlot)
 export(count_category)
+export(date_distance_fun)
 export(heatmap_group_csf)
 export(plot_category)
