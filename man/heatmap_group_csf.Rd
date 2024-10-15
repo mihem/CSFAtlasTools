@@ -30,7 +30,7 @@ heatmap_group_csf(
 
 \item{cutree_cols}{numeric value representing the number of clusters the columns are divied into, default: 8}
 
-\item{output_dir}{character string representing the directory to save the heatmap, if NULL, the heatmap is saved to \verb{/analysis/results/heatmap/}}
+\item{output_dir}{character string representing the directory to save the heatmap, if NULL, the heatmap is saved to \verb{/analysis/relative/heatmap/}}
 }
 \value{
 save grouped heatmap to folder

@@ -36,7 +36,7 @@ plot_category <- function(data, category, width, height, output_dir = NULL) {
         ggplot2::coord_flip()
     data_quo <- deparse(substitute(data))
     if (is.null(output_dir)) {
-        output_dir <- file.path("analysis", "results", "category")
+        output_dir <- file.path("analysis", "relative", "category")
     }
     file_path <- file.path(output_dir, glue::glue("count_{category}_{data_quo}.pdf"))
     ggplot2::ggsave(file_path, plot = plot, width = width, height = height, device = cairo_pdf)
@@ -47,7 +47,9 @@ plot_category <- function(data, category, width, height, output_dir = NULL) {
 ################################################################################
 
 #' @title Grouped heatmap
+#' 
 #' @description Plot goruped heatmap and save to folder
+#' 
 #' @param category character string representing the category
 #' @param data data frame
 #' @param label character string representing the label
@@ -55,8 +57,10 @@ plot_category <- function(data, category, width, height, output_dir = NULL) {
 #' @param height numeric value representing the height of the heatmap
 #' @param transform boolean value representing if the data should be transposed
 #' @param cutree_cols numeric value representing the number of clusters the columns are divied into, default: 8
-#' @param output_dir character string representing the directory to save the heatmap, if NULL, the heatmap is saved to `/analysis/results/heatmap/`
+#' @param output_dir character string representing the directory to save the heatmap, if NULL, the heatmap is saved to `/analysis/relative/heatmap/`
+#' 
 #' @return save grouped heatmap to folder
+#' 
 #' @examples
 #' \dontrun{
 #' heatmap_group_csf(category = "dx_icd_level1", data = csf_data, label = "CSF", cutree_rows = 4, height = 5)
@@ -97,7 +101,7 @@ heatmap_group_csf <- function(category, data, label, cutree_rows, height, transf
         border_color = NA
     )
     if (is.null(output_dir)) {
-        output_dir <- file.path("analysis", "results", "heatmap")
+        output_dir <- file.path("analysis", "relative", "heatmap")
     }
     file_path <- file.path(output_dir, glue::glue("hmap_{label}_{category}.pdf"))
     grDevices::cairo_pdf(file_path, width = 12, height = height)
@@ -113,13 +117,16 @@ heatmap_group_csf <- function(category, data, label, cutree_rows, height, transf
 #'
 #' @param data dataframe with the gene names, q-values and TF-IDF values.
 #' @param cluster the cluster to plot.
-#' @example 
+#' @param output_dir the directory to save the plot. If NULL, the plot is saved to `/analysis/relative/abundance/`.
+#' 
+#' @return a ggplot2 plot saved to output_dir
+#' 
+#' @examples
 #' \dontrun{
 #' lapply(unique(seu_csf_train$cluster), abundanceCategoryPlot, data = abundance_combined_soupx_csf_norm_datathin)
 #' }
 #' @export
-abundanceCategoryPlot <- function(data, cluster) {
-    # Rename the variables to match the ggplot() function.
+abundanceCategoryPlot <- function(data, cluster, output_dir = NULL) {
     data_plot <- dplyr::rename(data, variable = gene) |>
         dplyr::mutate(qval = -log10(qval)) |>
         dplyr::filter(cluster == {{ cluster }})
@@ -129,7 +136,7 @@ abundanceCategoryPlot <- function(data, cluster) {
 
     # Create the barplot.
     plot <- data_plot |>
-        ggplot2::ggplot(ggplot2::aes(x = qval, y = ggplot2::reorder(variable, qval), fill = tfidf)) +
+        ggplot2::ggplot(ggplot2::aes(x = qval, y = stats::reorder(variable, qval), fill = tfidf)) +
         ggplot2::geom_col() +
         viridis::scale_fill_viridis() +
         ggplot2::theme_classic() +
@@ -137,7 +144,13 @@ abundanceCategoryPlot <- function(data, cluster) {
         ggplot2::labs(x = bquote(~ -Log[10] ~ "qval"), y = "", fill = "TF-IDF", title = cluster)
 
     # Save the plot to a PDF file.
-    ggplot2::ggsave(file.path("analysis", "relative", "abundance", paste0("barplot_soupx_", deparse(substitute(data)), "_cluster_", cluster, ".pdf")),
+    if (is.null(output_dir)) {
+        output_dir <- file.path("analysis", "relative", "abundance")
+    }
+    data_quo <- deparse(substitute(data))
+    file_path <- file.path(output_dir, glue::glue("barplot_soupx_{data_quo}_cluster_{cluster}.pdf"))
+
+    ggplot2::ggsave(file.path(file_path),
         width = 6,
         height = height,
         device = grDevices::cairo_pdf

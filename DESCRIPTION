@@ -20,7 +20,8 @@ Imports:
     pheatmap,
     recipes,
     tibble,
-    grDevices
+    grDevices,
+    viridis
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
