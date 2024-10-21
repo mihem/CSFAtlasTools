@@ -42,3 +42,25 @@ date_distance_fun <- function(v1, v2, max_dist = 1) {
     ret <- data.frame(include = (dist <= max_dist))
     return(ret)
 }
+
+################################################################################
+# Scale variable
+################################################################################
+
+#' @title Scale a variable
+#' 
+#' @description Scale a variable by subtracting the mean and dividing by the standard deviation
+#' 
+#' @param x a numeric vector
+#' 
+#' @return a numeric vector with the same length as x
+#' 
+#' @examples
+#' scale_this(1:10)
+#' @export
+scale_this <- function(x) {
+  if (!is.numeric(x)) {
+    stop("Input must be numeric")
+  }
+  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+}
