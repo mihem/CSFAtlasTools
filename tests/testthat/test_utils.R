@@ -37,3 +37,22 @@ test_that("scale_this works correctly", {
     expect_error(scale_this(x), "Input must be numeric")
 })
 
+################################################################################
+# lm_age
+################################################################################
+test_that("lm_age generates a tidy data frame", {
+  # Create example data
+  example_data <- data.frame(
+    variable = runif(10, 0, 10),
+    age = runif(10, 0, 100)
+  )
+  age_term <- lm_age(data = example_data, variable = "variable")
+  
+  # Test 1: The output is a data frame
+  expect_s3_class(age_term, "tbl_df")
+  # Test 2: The output has the correct columns
+  expect_equal(names(age_term), c("term", "estimate", "std.error", "statistic", "p.value"))
+  # Test 3: The output has the correct number of rows
+  expect_equal(nrow(age_term), 1)
+})
+
