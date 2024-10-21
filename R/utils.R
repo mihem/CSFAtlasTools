@@ -64,3 +64,30 @@ scale_this <- function(x) {
   }
   (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
 }
+################################################################################
+# Linear model for age
+################################################################################
+
+#' @title Linear model for age
+#' 
+#' @description Create a linear model with a single predictor age for a given
+#' variable
+#' 
+#' @param data a data frame
+#' @param variable a character string with the name of a column in the data frame
+#' 
+#' @return a tidy tibble with the estimate, standard error, statistic,
+#' and p.value for the age term
+#' 
+#' @export
+lm_age <- function(data, variable) {
+  # Create the formula for the linear model
+  formula <- as.formula(paste0(variable, " ~ age"))
+  
+  # Fit the linear model
+  tidy_lm <- broom::tidy(lm(formula, data = data))
+  
+  # Subset the age term
+  age_term <- dplyr::filter(tidy_lm, term == "age")
+  return(age_term)
+}
