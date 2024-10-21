@@ -168,6 +168,8 @@ abundanceCategoryPlot <- function(data, cluster, output_dir = NULL) {
 #' @param var character string representing the variable
 #' @param output_dir character string representing the directory to save the
 #'   plot. If NULL, the plot is saved to `/analysis/relative/relative/`.
+#' @param estimate_df data frame containing the estimates
+#' @param plot_df data frame containing the plot
 #' 
 #' @return a ggplot2 plot saved to output_dir
 #' 
@@ -177,12 +179,12 @@ abundanceCategoryPlot <- function(data, cluster, output_dir = NULL) {
 #' }
 #' @export
 #individul correlation plots of top variables ----
-corrPlot <- function(var, output_dir = NULL) {
+corrPlot <- function(var, estimate_df, plot_df, output_dir = NULL) {
     # Filter the data based on the variable
-    result <- dplyr::filter(cor_age_regress_ctrl, var == {{ var }})
+    result <- dplyr::filter(estimate_df, var == {{ var }})
     # Create the correlation plot
     plot <-
-        combined_ctrl_regress_sex_norm |>
+        plot_df |>
         ggplot2::ggplot(ggplot2::aes(x = age, y = .data[[var]])) +
         ggplot2::geom_point(size = 0.1, alpha = 0.5) +
         ggplot2::geom_smooth(method = "lm", se = TRUE) +

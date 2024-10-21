@@ -4,10 +4,14 @@
 \alias{corrPlot}
 \title{Individual correlation plots of variables}
 \usage{
-corrPlot(var, output_dir = NULL)
+corrPlot(var, estimate_df, plot_df, output_dir = NULL)
 }
 \arguments{
 \item{var}{character string representing the variable}
+
+\item{estimate_df}{data frame containing the estimates}
+
+\item{plot_df}{data frame containing the plot}
 
 \item{output_dir}{character string representing the directory to save the
 plot. If NULL, the plot is saved to \verb{/analysis/relative/relative/}.}

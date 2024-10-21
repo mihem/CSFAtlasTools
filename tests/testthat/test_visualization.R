@@ -91,3 +91,39 @@ test_that("abundanceCategoryPlot creates a ggplot and saves it correctly", {
     file.remove(file_path)
   }
 })
+
+################################################################################
+# Test abundacyCategoryPlot
+################################################################################
+test_that("corrPlot creates a ggplot and saves it correctly", {
+  # Create a sample data frame
+  var <- "example_var"
+  estimate_df <- data.frame(
+    var = c("example_var", "example_var", "example_var"),
+    age = c(20, 30, 40),
+    estimate = c(0.5, 0.6, 0.7),
+    p_adjust = c(0.01, 0.02, 0.03)
+  )
+  plot_df <- data.frame(
+    age = c(20, 30, 40),
+    example_var = c(1, 2, 3)
+  )
+
+  # Define the output directory
+  output_dir <- "."
+
+  # Call the corrPlot function
+  corrPlot(var, estimate_df, plot_df, output_dir)
+
+  # Test 1: Function creates a file in the specified directory
+  file_path <- file.path(output_dir, glue::glue("correlation_ctrl_age_regress_{var}.pdf"))
+  expect_true(file.exists(file_path)) # Check if the file is created
+
+  # Test 2: Function creates a file that is not empty
+  expect_gt(file.info(file_path)$size, 0)
+
+  # Cleanup: Remove the generated file
+  if (file.exists(file_path)) {
+    file.remove(file_path)
+  }
+})
