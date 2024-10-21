@@ -1,5 +1,5 @@
 ################################################################################
-# Test date_distance_fun
+# date_distance_fun
 ################################################################################
 test_that("date_distance_fun works correctly", {
   # Create example dates
@@ -15,3 +15,25 @@ test_that("date_distance_fun works correctly", {
   result <- date_distance_fun(date1, date3, max_dist = 5)
   expect_false(result$include) # Should be FALSE since the difference is 9 days
 })
+
+################################################################################
+# scale_this
+################################################################################
+test_that("scale_this works correctly", {
+    # test 1: scale a vector with a mean of 0 and a standard deviation of 1
+    x <- stats::rnorm(10)
+    expect_equal(scale_this(x), as.vector(scale(x)))
+    
+    # test 2: scale a vector with a mean of 5 and a standard deviation of 2
+    x <- stats::rnorm(10, mean = 5, sd = 2)
+    expect_equal(scale_this(x), as.vector(scale(x)))
+    
+    # test 3: scale a vector with a mean of 0 and a standard deviation of 0
+    x <- rep(0, 10)
+    expect_equal(scale_this(x), as.vector(scale(x)))
+    
+    # # test 4: scale a vector with a mean of 1 and a standard deviation of 0
+    x <- c("1")
+    expect_error(scale_this(x), "Input must be numeric")
+})
+
