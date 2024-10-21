@@ -140,7 +140,7 @@ abundanceCategoryPlot <- function(data, cluster, output_dir = NULL) {
         ggplot2::geom_col() +
         viridis::scale_fill_viridis() +
         ggplot2::theme_classic() +
-        ggplot2::theme(panel.border = ggplot2::element_rect(color = "black", size = 1, fill = NA)) +
+        ggplot2::theme(panel.border = ggplot2::element_rect(color = "black", linewidth = 1, fill = NA)) +
         ggplot2::labs(x = bquote(~ -Log[10] ~ "qval"), y = "", fill = "TF-IDF", title = cluster)
 
     # Save the plot to a PDF file.
