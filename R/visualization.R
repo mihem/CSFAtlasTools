@@ -70,7 +70,7 @@ heatmap_group_csf <- function(category, data, label, cutree_rows, height, transf
     formula <- paste0(category, "~", ".")
     phmap_data_norm <- data |>
         dplyr::select(category, granulos:lactate) |>
-        tidyr::drop_na(.data[[category]]) |>
+        tidyr::drop_na(all_of(category)) |>
         recipes::recipe(stats::as.formula(formula)) |>
         bestNormalize::step_orderNorm(recipes::all_numeric()) |>
         recipes::prep() |>
