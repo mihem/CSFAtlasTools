@@ -136,7 +136,6 @@ heatmap_group_csf <- function(category, data, label, cutree_rows, height, transf
 #' @return a ggplot2 plot saved to output_dir
 #'
 #' @examples
-#' @examples
 #' data <- data.frame(
 #'     gene = c("Gene1", "Gene2", "Gene3"),
 #'     qval = c(0.01, 0.05, 0.001),
@@ -279,4 +278,33 @@ compSex <- function(var, estimate_df, plot_df, output_dir) {
     # Construct the file path and save the plot
     file_path <- file.path(output_dir, glue::glue("correlation_stat_sex_regress_{var}.pdf"))
     ggplot2::ggsave(file_path, plot, width = 3, height = 4)
+}
+################################################################################
+# compare via boxplots
+################################################################################
+
+#' @title Compare via boxplots
+#' 
+#' @description This function creates a boxplot to compare a parameter between groups.
+#' 
+#' @param par A character string representing the parameter to be plotted.
+#' @param df A data frame containing the data for plotting.
+#' 
+#' @return A ggplot2 plot.
+#' 
+#' @examples
+#' par <- "example_par"
+#' df <- data.frame(
+#'     group = c("group1", "group1", "group1", "group2", "group2", "group2"),
+#'     example_par = c(3,7, 8, 5, 9, 6)
+#' )
+#' compBoxplot(par, df)
+#' @export
+compBoxplot <- function(par, df) {
+    df |>
+        ggplot2::ggplot(ggplot2::aes(x = group, y = .data[[par]], fill = group)) +
+        ggplot2::geom_boxplot() +
+        ggplot2::theme_bw() +
+        ggplot2::xlab("") +
+        ggplot2::theme(legend.position = "none")
 }
