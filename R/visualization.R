@@ -378,19 +378,16 @@ stabilityCSF <- function(t, df, vars_cont, vars_cat, normal_estimate, weibull_es
     # Preprocess the data
     seu_csf_train$RNA$data <- seu_csf_train$RNA$counts
     seu_csf_test$RNA$data <- seu_csf_test$RNA$counts
-    seu_csf_train <-
-        seu_csf_train |>
-        Seurat::FindVariableFeatures() |>
-        Seurat::ScaleData() |>
-        Seurat::RunPCA() |>
-        Seurat::FindNeighbors(dims = 1:ndim)
-    seu_csf_test <-
-        seu_csf_test |>
-        Seurat::FindVariableFeatures() |>
-        Seurat::ScaleData() |>
-        Seurat::RunPCA() |>
-        Seurat::FindNeighbors(dims = 1:ndim)
-    
+
+    seu_csf_train <- Seurat::FindVariableFeatures(seu_csf_train)
+    seu_csf_train <- Seurat::ScaleData(seu_csf_train)
+    seu_csf_train <- Seurat::RunPCA(seu_csf_train)
+    seu_csf_train <- Seurat::FindNeighbors(seu_csf_train, dims = 1:ndim)
+
+    seu_csf_test <- Seurat::FindVariableFeatures(seu_csf_test)
+    seu_csf_test <- Seurat::ScaleData(seu_csf_test)
+    seu_csf_test <- Seurat::RunPCA(seu_csf_test)
+    seu_csf_test <- Seurat::FindNeighbors(seu_csf_test, dims = 1:ndim)
     # Calculate the stability at different resolutions
     resRange <- seq(0.2, 1.2, by = 0.1)
     resNames <- paste0("RNA_snn_res.", resRange)

@@ -180,3 +180,45 @@ test_that("compBoxplot works correctly", {
   # Test 2: Function creates a plot with two groups
   expect_equal(length(ggplot2::ggplot_build(plot)$data[[1]]$x), 2) # Check if the plot has two groups
 })
+
+################################################################################
+# test stabilityCSF
+################################################################################
+test_that("stabilityCSF returns named vector", {
+  # Create example data
+  df <- data.frame(
+    a = rnorm(100, mean = 2, sd = 1),
+    b = rnorm(100, mean = 2, sd = 1),
+    x = rpois(100, lambda = 2),
+    y = rpois(100, lambda = 2),
+    z = rpois(100, lambda = 2)
+  )
+  vars_cont <- c("a", "b")
+  vars_cat <- c("x", "y", "z")
+  normal_estimate <-
+    matrix(c(0.5, 0.2),
+      nrow = nrow(df),
+      ncol = length(vars_cont)
+    )
+  weibull_estimate <-
+    matrix(c(0.5, 0.2, 0.7),
+      nrow = nrow(df),
+      ncol = length(vars_cat)
+    )
+  ndim <- 2
+  suppressWarnings(
+    result <-
+      stabilityCSF(
+        t = 1,
+        df = df,
+        vars_cont = vars_cont,
+        vars_cat = vars_cat,
+        normal_estimate = normal_estimate,
+        weibull_estimate = weibull_estimate,
+        ndim = ndim
+      )
+  )
+  # Test
+  expect_type(result, "double")
+  expect_equal(length(result), 11)
+})
