@@ -11,17 +11,23 @@
 #' @param category The name of the category column in the data frame.
 #' @param width The width of the plot.
 #' @param height The height of the plot.
-#' @param output_dir The directory to save the plot. If NULL, the plot saved to
+#' @param output_dir The directory to save the plot.
 #'
 #' @return A ggplot2 plot object.
 #'
 #' @examples
-#' \dontrun{
-#' plot_category(data = combined_complete, category = "dx_icd_level1", width = 4, height = 2)
-#' }
+#' data <- data.frame(
+#'   category = c("A", "A", "B", "B", "C", "C"),
+#'   value = c(1, 2, 3, 4, 5, 6)
+#' )
+#'
+#' category <- "category"
+#' # Call the plot_category function
+#' plot_category(data, category, width = 5, height = 5, output_dir = ".")
+#' 
 #' @export
 
-plot_category <- function(data, category, width, height, output_dir = NULL) {
+plot_category <- function(data, category, width, height, output_dir) {
     plot <- dplyr::count(data, .data[[category]]) |>
         tidyr::drop_na() |>
         ggplot2::ggplot(ggplot2::aes(x = stats::reorder(.data[[category]], n), y = n, fill = .data[[category]])) +
@@ -35,9 +41,6 @@ plot_category <- function(data, category, width, height, output_dir = NULL) {
         ) +
         ggplot2::coord_flip()
     data_quo <- deparse(substitute(data))
-    if (is.null(output_dir)) {
-        output_dir <- file.path("analysis", "relative", "category")
-    }
     file_path <- file.path(output_dir, glue::glue("count_{category}_{data_quo}.pdf"))
     ggplot2::ggsave(file_path, plot = plot, width = width, height = height, device = cairo_pdf)
 }
@@ -57,14 +60,28 @@ plot_category <- function(data, category, width, height, output_dir = NULL) {
 #' @param height numeric value representing the height of the heatmap
 #' @param transform boolean value representing if the data should be transposed
 #' @param cutree_cols numeric value representing the number of clusters the columns are divied into, default: 8
-#' @param output_dir character string representing the directory to save the heatmap, if NULL, the heatmap is saved to `/analysis/relative/heatmap/`
+#' @param output_dir character string representing the directory to save the heatmap.
 #' 
 #' @return save grouped heatmap to folder
 #' 
 #' @examples
-#' \dontrun{
-#' heatmap_group_csf(category = "dx_icd_level1", data = csf_data, label = "CSF", cutree_rows = 4, height = 5)
-#'}
+#' example_data <- tibble::tibble(
+#'   category = rep(c("A", "B", "C"), each = 3),
+#'   granulos = runif(9, 0, 10),
+#'   lactate = runif(9, 0, 5)
+#' )
+#' category <- "category"
+#' label <- "test_heatmap"
+#' heatmap_group_csf(
+#'   category = category,
+#'   data = example_data,
+#'   label = label,
+#'   cutree_rows = 3,
+#'   height = 8,
+#'   transform = FALSE,
+#'   cutree_cols = 2,
+#'   output_dir = "."
+#' )
 #' @export
 heatmap_group_csf <- function(category, data, label, cutree_rows, height, transform = FALSE, cutree_cols = 8, output_dir = NULL) {
     formula <- paste0(category, "~", ".")
@@ -100,9 +117,6 @@ heatmap_group_csf <- function(category, data, label, cutree_rows, height, transf
         clustering_method = "ward.D2",
         border_color = NA
     )
-    if (is.null(output_dir)) {
-        output_dir <- file.path("analysis", "relative", "heatmap")
-    }
     file_path <- file.path(output_dir, glue::glue("hmap_{label}_{category}.pdf"))
     grDevices::cairo_pdf(file_path, width = 12, height = height)
     print(phmap_group)
@@ -117,16 +131,27 @@ heatmap_group_csf <- function(category, data, label, cutree_rows, height, transf
 #'
 #' @param data dataframe with the gene names, q-values and TF-IDF values.
 #' @param cluster the cluster to plot.
-#' @param output_dir the directory to save the plot. If NULL, the plot is saved to `/analysis/relative/abundance/`.
-#' 
+#' @param output_dir the directory to save the plot.
+#'
 #' @return a ggplot2 plot saved to output_dir
-#' 
+#'
 #' @examples
-#' \dontrun{
-#' lapply(unique(seu_csf_train$cluster), abundanceCategoryPlot, data = abundance_combined_soupx_csf_norm_datathin)
-#' }
+#' @examples
+#' data <- data.frame(
+#'     gene = c("Gene1", "Gene2", "Gene3"),
+#'     qval = c(0.01, 0.05, 0.001),
+#'     tfidf = c(0.8, 0.6, 0.9),
+#'     cluster = c("Cluster1", "Cluster1", "Cluster1")
+#' )
+#'
+#' # Define the cluster and output directory
+#' cluster <- "Cluster1"
+#' output_dir <- "."
+#'
+#' # Call the abundanceCategoryPlot function
+#' abundanceCategoryPlot(data, cluster, output_dir)
 #' @export
-abundanceCategoryPlot <- function(data, cluster, output_dir = NULL) {
+abundanceCategoryPlot <- function(data, cluster, output_dir) {
     data_plot <- dplyr::rename(data, variable = gene) |>
         dplyr::mutate(qval = -log10(qval)) |>
         dplyr::filter(cluster == {{ cluster }})
@@ -144,9 +169,6 @@ abundanceCategoryPlot <- function(data, cluster, output_dir = NULL) {
         ggplot2::labs(x = bquote(~ -Log[10] ~ "qval"), y = "", fill = "TF-IDF", title = cluster)
 
     # Save the plot to a PDF file.
-    if (is.null(output_dir)) {
-        output_dir <- file.path("analysis", "relative", "abundance")
-    }
     data_quo <- deparse(substitute(data))
     file_path <- file.path(output_dir, glue::glue("barplot_soupx_{data_quo}_cluster_{cluster}.pdf"))
 
@@ -162,34 +184,34 @@ abundanceCategoryPlot <- function(data, cluster, output_dir = NULL) {
 ################################################################################
 
 #' @title Individual correlation plots of variables
-#' 
+#'
 #' @description Create individual correlation plots of selected variables
-#' 
+#'
 #' @param var character string representing the variable
 #' @param output_dir character string representing the directory to save the
-#'   plot. If NULL, the plot is saved to `/analysis/relative/relative/`.
+#'   plot.
 #' @param estimate_df data frame containing the estimates
 #' @param plot_df data frame containing the plot
-#' 
+#'
 #' @return a ggplot2 plot saved to output_dir
-#' 
+#'
 #' @examples
-#'  var <- "example_var"
-#'  estimate_df <- data.frame(
-#'    var = c("example_var", "example_var", "example_var"),
-#'    age = c(20, 30, 40),
-#'    estimate = c(0.5, 0.6, 0.7),
-#'    p_adjust = c(0.01, 0.02, 0.03)
-#'  )
-#'plot_df <- data.frame(
-  #'age = c(20, 30, 40),
-  #'example_var = c(1, 2, 3)
-#')
-#'output_dir <- "."
-#'corrPlot(var, estimate_df, plot_df, output_dir)
+#' var <- "example_var"
+#' estimate_df <- data.frame(
+#'     var = c("example_var", "example_var", "example_var"),
+#'     age = c(20, 30, 40),
+#'     estimate = c(0.5, 0.6, 0.7),
+#'     p_adjust = c(0.01, 0.02, 0.03)
+#' )
+#' plot_df <- data.frame(
+#'     age = c(20, 30, 40),
+#'     example_var = c(1, 2, 3)
+#' )
+#' output_dir <- "."
+#' corrPlot(var, estimate_df, plot_df, output_dir)
 #' @export
-#individul correlation plots of top variables ----
-corrPlot <- function(var, estimate_df, plot_df, output_dir = NULL) {
+# individul correlation plots of top variables ----
+corrPlot <- function(var, estimate_df, plot_df, output_dir) {
     # Filter the data based on the variable
     result <- dplyr::filter(estimate_df, var == {{ var }})
     # Create the correlation plot
@@ -205,10 +227,6 @@ corrPlot <- function(var, estimate_df, plot_df, output_dir = NULL) {
             subtitle = paste0("coeff: ", signif(result$estimate, 2), ", adjusted p: ", signif(result$p_adjust, 2))
         )
     # Save the plot to a PDF file
-    if (is.null(output_dir)) {
-        output_dir <- file.path("analysis", "relative", "relative")
-    }
-
     file_path <- file.path(output_dir, glue::glue("correlation_ctrl_age_regress_{var}.pdf"))
     ggplot2::ggsave(file_path, plot, width = 4, height = 4)
 }
@@ -231,7 +249,7 @@ corrPlot <- function(var, estimate_df, plot_df, output_dir = NULL) {
 #' @examples
 #' var <- "example_var"
 #' estimate_df <- data.frame(
-#'     var = c("example_var", "example_var", "example_var", "example_var", "example_var", "example_var"),
+#'     var = rep("example_var", 6),
 #'     sex = c("M", "F", "M", "F", "M", "F"),
 #'     akp_effect = c(0.5, -0.6, 0.7, -0.8, 0.9, -1.0),
 #'     p_adjust = c(0.01, 0.02, 0.03, 0.04, 0.05, 0.06)

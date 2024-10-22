@@ -82,7 +82,7 @@ scale_this <- function(x) {
 #' @export
 lm_age <- function(data, variable) {
   # Create the formula for the linear model
-  formula <- as.formula(paste0(variable, " ~ age"))
+  formula <- stats::as.formula(paste0(variable, " ~ age"))
   
   # Fit the linear model
   tidy_lm <- broom::tidy(lm(formula, data = data))

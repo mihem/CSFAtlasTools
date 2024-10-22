@@ -4,14 +4,14 @@
 \alias{abundanceCategoryPlot}
 \title{the abundance of each gene in a cluster as a barplot.}
 \usage{
-abundanceCategoryPlot(data, cluster, output_dir = NULL)
+abundanceCategoryPlot(data, cluster, output_dir)
 }
 \arguments{
 \item{data}{dataframe with the gene names, q-values and TF-IDF values.}
 
 \item{cluster}{the cluster to plot.}
 
-\item{output_dir}{the directory to save the plot. If NULL, the plot is saved to \verb{/analysis/relative/abundance/}.}
+\item{output_dir}{the directory to save the plot.}
 }
 \value{
 a ggplot2 plot saved to output_dir
@@ -20,7 +20,17 @@ a ggplot2 plot saved to output_dir
 the abundance of each gene in a cluster as a barplot.
 }
 \examples{
-\dontrun{
-lapply(unique(seu_csf_train$cluster), abundanceCategoryPlot, data = abundance_combined_soupx_csf_norm_datathin)
-}
+data <- data.frame(
+    gene = c("Gene1", "Gene2", "Gene3"),
+    qval = c(0.01, 0.05, 0.001),
+    tfidf = c(0.8, 0.6, 0.9),
+    cluster = c("Cluster1", "Cluster1", "Cluster1")
+)
+
+# Define the cluster and output directory
+cluster <- "Cluster1"
+output_dir <- "."
+
+# Call the abundanceCategoryPlot function
+abundanceCategoryPlot(data, cluster, output_dir)
 }

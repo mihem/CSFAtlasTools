@@ -4,7 +4,7 @@
 \alias{plot_category}
 \title{Plot Category}
 \usage{
-plot_category(data, category, width, height, output_dir = NULL)
+plot_category(data, category, width, height, output_dir)
 }
 \arguments{
 \item{data}{A data frame containing the category column.}
@@ -15,7 +15,7 @@ plot_category(data, category, width, height, output_dir = NULL)
 
 \item{height}{The height of the plot.}
 
-\item{output_dir}{The directory to save the plot. If NULL, the plot saved to}
+\item{output_dir}{The directory to save the plot.}
 }
 \value{
 A ggplot2 plot object.
@@ -28,7 +28,13 @@ and returns a ggplot2 plot of the category.
 This function plots a category using ggplot2.
 }
 \examples{
-\dontrun{
-plot_category(data = combined_complete, category = "dx_icd_level1", width = 4, height = 2)
-}
+data <- data.frame(
+  category = c("A", "A", "B", "B", "C", "C"),
+  value = c(1, 2, 3, 4, 5, 6)
+)
+
+category <- "category"
+# Call the plot_category function
+plot_category(data, category, width = 5, height = 5, output_dir = ".")
+
 }

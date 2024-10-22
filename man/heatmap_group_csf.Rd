@@ -30,7 +30,7 @@ heatmap_group_csf(
 
 \item{cutree_cols}{numeric value representing the number of clusters the columns are divied into, default: 8}
 
-\item{output_dir}{character string representing the directory to save the heatmap, if NULL, the heatmap is saved to \verb{/analysis/relative/heatmap/}}
+\item{output_dir}{character string representing the directory to save the heatmap.}
 }
 \value{
 save grouped heatmap to folder
@@ -39,7 +39,21 @@ save grouped heatmap to folder
 Plot goruped heatmap and save to folder
 }
 \examples{
-\dontrun{
-heatmap_group_csf(category = "dx_icd_level1", data = csf_data, label = "CSF", cutree_rows = 4, height = 5)
-}
+example_data <- tibble::tibble(
+  category = rep(c("A", "B", "C"), each = 3),
+  granulos = runif(9, 0, 10),
+  lactate = runif(9, 0, 5)
+)
+category <- "category"
+label <- "test_heatmap"
+heatmap_group_csf(
+  category = category,
+  data = example_data,
+  label = label,
+  cutree_rows = 3,
+  height = 8,
+  transform = FALSE,
+  cutree_cols = 2,
+  output_dir = "."
+)
 }
