@@ -18,8 +18,8 @@ A tidy data frame containing the Wilcoxon test results and the AKP effect size.
 Perform a Wilcoxon test and calculate the Algina, Keselman, and Penfield (AKP) effect size. This is a robust version of Cohen's d.
 }
 \examples{
-
 df <- data.frame(
-   sex = c("M", "M", "M", "F", "F")
+  value = c(10.1, 20.3, 30.5, 40.7, 50.9, 60.1, 70.3, 80.5, 90.7, 100.9),
+  sex = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F")
 )
 }

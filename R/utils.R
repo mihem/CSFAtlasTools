@@ -105,11 +105,10 @@ lm_age <- function(data, variable) {
 #' @return A tidy data frame containing the Wilcoxon test results and the AKP effect size.
 #'
 #' @examples
-#' 
 #' df <- data.frame(
-#’    value = c(10, 20, 40, 20, 30), 
-#'    sex = c("M", "M", "M", "F", "F")
-#')
+#'   value = c(10.1, 20.3, 30.5, 40.7, 50.9, 60.1, 70.3, 80.5, 90.7, 100.9),
+#'   sex = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F")
+#' )
 #' @export
 my_wilcox_test <- function(data, var) {
   # Create the formula for the Wilcoxon test
