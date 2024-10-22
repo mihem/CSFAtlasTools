@@ -91,3 +91,39 @@ lm_age <- function(data, variable) {
   age_term <- dplyr::filter(tidy_lm, term == "age")
   return(age_term)
 }
+
+################################################################################
+# Statistical test for sex
+################################################################################
+#' @title Wilcoxon Test with AKP Effect Size (robust version of Cohen's d)
+#'
+#' @description Perform a Wilcoxon test and calculate the Algina, Keselman, and Penfield (AKP) effect size. This is a robust version of Cohen's d.
+#'
+#' @param data A data frame containing the variables for the test.
+#' @param var A character string representing the variable to be tested against 'sex'.
+#'
+#' @return A tidy data frame containing the Wilcoxon test results and the AKP effect size.
+#'
+#' @examples
+#' 
+#' df <- data.frame(
+#’    value = c(10, 20, 40, 20, 30), 
+#'    sex = c("M", "M", "M", "F", "F")
+#')
+#' @export
+my_wilcox_test <- function(data, var) {
+  # Create the formula for the Wilcoxon test
+  my_formula <- paste0(var, "~ sex")
+  
+  # Calculate the AKP effect size using the WRS2 package
+  my_formula <-  paste0(var, "~ sex")
+  akp_effect <- WRS2::akp.effect(stats::as.formula(my_formula), data = data)
+  
+  # Perform the Wilcoxon test and convert the result to a tidy data frame
+  res <- broom::tidy(stats::wilcox.test(stats::as.formula(my_formula), data = data))
+  
+  # Add the AKP effect size to the results
+  res$akp_effect <- akp_effect$AKPeffect
+  
+  return(res)
+}

@@ -22,7 +22,8 @@ Imports:
     tibble,
     grDevices,
     viridis,
-    broom
+    broom,
+    WRS2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
