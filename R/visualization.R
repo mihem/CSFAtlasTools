@@ -296,7 +296,7 @@ compSex <- function(var, estimate_df, plot_df, output_dir) {
 #' par <- "example_par"
 #' df <- data.frame(
 #'     group = c("group1", "group1", "group1", "group2", "group2", "group2"),
-#'     example_par = c(3,7, 8, 5, 9, 6)
+#'     example_par = c(3, 7, 8, 5, 9, 6)
 #' )
 #' compBoxplot(par, df)
 #' @export

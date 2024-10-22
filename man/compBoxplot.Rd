@@ -21,7 +21,7 @@ This function creates a boxplot to compare a parameter between groups.
 par <- "example_par"
 df <- data.frame(
     group = c("group1", "group1", "group1", "group2", "group2", "group2"),
-    example_par = c(3,7, 8, 5, 9, 6)
+    example_par = c(3, 7, 8, 5, 9, 6)
 )
 compBoxplot(par, df)
 }

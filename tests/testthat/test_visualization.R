@@ -159,3 +159,24 @@ test_that("compSex works correctly", {
     file.remove(file_path)
   }
 })
+
+################################################################################
+# test compBoxplot
+################################################################################
+test_that("compBoxplot works correctly", {
+  # Create a sample data frame
+  par <- "example_par"
+  df <- data.frame(
+    group = c("group1", "group1", "group1", "group2", "group2", "group2"),
+    example_par = c(3, 7, 8, 5, 9, 6)
+  )
+
+  # Call the compBoxplot function
+  plot <- compBoxplot(par, df)
+
+  # Test 1: Function creates a plot
+  expect_true(ggplot2::is.ggplot(plot)) # Check if the function returns a ggplot object
+
+  # Test 2: Function creates a plot with two groups
+  expect_equal(length(ggplot2::ggplot_build(plot)$data[[1]]$x), 2) # Check if the plot has two groups
+})
