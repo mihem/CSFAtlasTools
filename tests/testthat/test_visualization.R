@@ -127,3 +127,35 @@ test_that("corrPlot creates a ggplot and saves it correctly", {
     file.remove(file_path)
   }
 })
+
+################################################################################
+# Test compSex
+################################################################################
+test_that("compSex works correctly", {
+  # Create a sample data frame
+  var <- "example_var"
+  estimate_df <- data.frame(
+    var = c("example_var", "example_var", "example_var", "example_var", "example_var", "example_var"),
+    sex = c("M", "F", "M", "F", "M", "F"),
+    akp_effect = c(0.5, -0.6, 0.7, -0.8, 0.9, -1.0),
+    p_adjust = c(0.01, 0.02, 0.03, 0.04, 0.05, 0.06)
+  )
+  plot_df <- data.frame(
+    sex = c("M", "F", "M", "F", "M", "F"),
+    example_var = c(1, 9, 6, 5, 4, 3)
+  )
+  output_dir <- "."
+  compSex(var, estimate_df, plot_df, output_dir)
+
+  # Test 1: Function creates a file in the specified directory
+  file_path <- file.path(output_dir, glue::glue("correlation_stat_sex_regress_{var}.pdf"))
+  expect_true(file.exists(file_path)) # Check if the file is created
+
+  # Test 2: Function creates a file that is not empty
+  expect_gt(file.info(file_path)$size, 0)
+
+  # Cleanup: Remove the generated file
+  if (file.exists(file_path)) {
+    file.remove(file_path)
+  }
+})
