@@ -23,7 +23,17 @@ a ggplot2 plot saved to output_dir
 Create individual correlation plots of selected variables
 }
 \examples{
-\dontrun{
-lapply(age_var, corrPlot)
-}
+ var <- "example_var"
+ estimate_df <- data.frame(
+   var = c("example_var", "example_var", "example_var"),
+   age = c(20, 30, 40),
+   estimate = c(0.5, 0.6, 0.7),
+   p_adjust = c(0.01, 0.02, 0.03)
+ )
+plot_df <- data.frame(
+age = c(20, 30, 40),
+example_var = c(1, 2, 3)
+)
+output_dir <- "."
+corrPlot(var, estimate_df, plot_df, output_dir)
 }

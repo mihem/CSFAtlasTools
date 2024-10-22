@@ -174,9 +174,19 @@ abundanceCategoryPlot <- function(data, cluster, output_dir = NULL) {
 #' @return a ggplot2 plot saved to output_dir
 #' 
 #' @examples
-#' \dontrun{
-#' lapply(age_var, corrPlot)
-#' }
+#'  var <- "example_var"
+#'  estimate_df <- data.frame(
+#'    var = c("example_var", "example_var", "example_var"),
+#'    age = c(20, 30, 40),
+#'    estimate = c(0.5, 0.6, 0.7),
+#'    p_adjust = c(0.01, 0.02, 0.03)
+#'  )
+#'plot_df <- data.frame(
+  #'age = c(20, 30, 40),
+  #'example_var = c(1, 2, 3)
+#')
+#'output_dir <- "."
+#'corrPlot(var, estimate_df, plot_df, output_dir)
 #' @export
 #individul correlation plots of top variables ----
 corrPlot <- function(var, estimate_df, plot_df, output_dir = NULL) {
@@ -200,10 +210,55 @@ corrPlot <- function(var, estimate_df, plot_df, output_dir = NULL) {
     }
 
     file_path <- file.path(output_dir, glue::glue("correlation_ctrl_age_regress_{var}.pdf"))
-    if (is.null(output_dir)) {
-        output_dir <- file.path("analysis", "relative", "relative")
-    }
-
-    file_path <- file.path(output_dir, glue::glue("correlation_ctrl_age_regress_{var}.pdf"))
     ggplot2::ggsave(file_path, plot, width = 4, height = 4)
+}
+
+################################################################################
+# compare variables between sex
+################################################################################
+
+#' @title Compare Variables Between Sex
+#'
+#' @description This function creates a boxplot to compare a variable between sexes and saves the plot to a specified directory.
+#'
+#' @param var A character string representing the variable to be plotted.
+#' @param estimate_df A data frame containing the estimates.
+#' @param plot_df A data frame containing the data for plotting.
+#' @param output_dir A character string representing the directory to save the plot.
+#'
+#' @return A ggplot2 plot saved to output_dir.
+#'
+#' @examples
+#' var <- "example_var"
+#' estimate_df <- data.frame(
+#'     var = c("example_var", "example_var", "example_var", "example_var", "example_var", "example_var"),
+#'     sex = c("M", "F", "M", "F", "M", "F"),
+#'     akp_effect = c(0.5, -0.6, 0.7, -0.8, 0.9, -1.0),
+#'     p_adjust = c(0.01, 0.02, 0.03, 0.04, 0.05, 0.06)
+#' )
+#' plot_df <- data.frame(
+#'     sex = c("M", "F", "M", "F", "M", "F"),
+#'     example_var = c(1, 9, 6, 5, 4, 3)
+#' )
+#' output_dir <- "."
+#' compSex(var, estimate_df, plot_df, output_dir)
+#' @export
+compSex <- function(var, estimate_df, plot_df, output_dir) {
+    # Filter the estimates data frame for the given variable
+    result <- dplyr::filter(estimate_df, var == {{ var }})
+    
+    # Create a boxplot comparing the variable between sexes
+    plot <- plot_df |>
+        ggplot2::ggplot(ggplot2::aes(x = sex, y = .data[[var]])) +
+        ggplot2::geom_boxplot() +
+        ggplot2::theme_bw() +
+        ggplot2::labs(
+            title = var,
+            subtitle = paste0("effect: ", signif(result$akp_effect, 2), ", adjusted p: ", signif(result$p_adjust, 2))
+        ) +
+        ggplot2::ylab("")
+    
+    # Construct the file path and save the plot
+    file_path <- file.path(output_dir, glue::glue("correlation_stat_sex_regress_{var}.pdf"))
+    ggplot2::ggsave(file_path, plot, width = 3, height = 4)
 }
