@@ -23,7 +23,11 @@ Imports:
     grDevices,
     viridis,
     broom,
-    WRS2
+    WRS2,
+    Seurat,
+    abind,
+    datathin,
+    mclust
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

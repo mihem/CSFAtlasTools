@@ -279,6 +279,7 @@ compSex <- function(var, estimate_df, plot_df, output_dir) {
     file_path <- file.path(output_dir, glue::glue("correlation_stat_sex_regress_{var}.pdf"))
     ggplot2::ggsave(file_path, plot, width = 3, height = 4)
 }
+
 ################################################################################
 # compare via boxplots
 ################################################################################
@@ -307,4 +308,104 @@ compBoxplot <- function(par, df) {
         ggplot2::theme_bw() +
         ggplot2::xlab("") +
         ggplot2::theme(legend.position = "none")
+}
+
+################################################################################
+# stability metric CSF
+################################################################################
+#' @title Stability metric for CSF
+#' 
+#' @description This function calculates the stability of Seurat clustering
+#' at different resolutions.
+#' 
+#' @param t The seed number for reproducibility.
+#' @param df The data frame containing the data for testing.
+#' @param vars_cont Continuous variables for datathin.
+#' @param vars_cat Categorical variables for datathin.
+#' @param normal_estimate Estimates for normally distributed parameters for datathin.
+#' @param weibull_estimate Estimates for weibull distributed parameters for datathin.
+#' @param ndim Number of dimensions for Seurat
+#' 
+#' @return A named vector of stability values.
+#' 
+#' @examples
+#' df <- data.frame(
+#'     a = rnorm(100, mean = 2, sd = 1),
+#'     b = rnorm(100, mean = 2, sd = 1),
+#'     x = rpois(100, lambda = 2),
+#'     y = rpois(100, lambda = 2),
+#'     z = rpois(100, lambda = 2)
+#' )
+#' vars_cont <- c("a", "b")
+#' vars_cat <- c("x", "y", "z")
+#' normal_estimate <-
+#'     matrix(c(0.5, 0.2),
+#'         nrow = nrow(df),
+#'         ncol = length(vars_cont)
+#'     )
+#' weibull_estimate <-
+#'     matrix(c(0.5, 0.2, 0.7),
+#'         nrow = nrow(df),
+#'         ncol = length(vars_cat)
+#'     )
+#' ndim <- 2
+#' stabilityCSF(
+#'      t = 1,
+#'      df = df,
+#'      vars_cont = vars_cont,
+#'      vars_cat = vars_cat,
+#'      normal_estimate = normal_estimate,
+#'      weibull_estimate = weibull_estimate,
+#'      ndim = ndim
+#' )
+#' @export
+stabilityCSF <- function(t, df, vars_cont, vars_cat, normal_estimate, weibull_estimate, ndim) {
+    # Set the seed for reproducibility
+    set.seed(t)
+    
+    # Create the data
+    data_thin1 <- datathin::datathin(df[vars_cont], family = "normal", K = 2, arg = normal_estimate)
+    set.seed(t)
+    data_thin2 <- datathin::datathin(df[vars_cat] + 1, family = "weibull", K = 2, arg = weibull_estimate)
+    data_thin <- abind::abind(data_thin1, data_thin2, along = 2)
+    data_train <- data_thin[, , 1]
+    data_test <- data_thin[, , 2]
+    
+    # Create the Seurat objects
+    seu_csf_train <- Seurat::CreateSeuratObject(t(data_train))
+    seu_csf_test <- Seurat::CreateSeuratObject(t(data_test))
+    
+    # Preprocess the data
+    seu_csf_train$RNA$data <- seu_csf_train$RNA$counts
+    seu_csf_test$RNA$data <- seu_csf_test$RNA$counts
+    seu_csf_train <-
+        seu_csf_train |>
+        Seurat::FindVariableFeatures() |>
+        Seurat::ScaleData() |>
+        Seurat::RunPCA() |>
+        Seurat::FindNeighbors(dims = 1:ndim)
+    seu_csf_test <-
+        seu_csf_test |>
+        Seurat::FindVariableFeatures() |>
+        Seurat::ScaleData() |>
+        Seurat::RunPCA() |>
+        Seurat::FindNeighbors(dims = 1:ndim)
+    
+    # Calculate the stability at different resolutions
+    resRange <- seq(0.2, 1.2, by = 0.1)
+    resNames <- paste0("RNA_snn_res.", resRange)
+    for (res in resRange) {
+        seu_csf_train <- Seurat::FindClusters(seu_csf_train, resolution = res)
+    }
+    for (res in resRange) {
+        seu_csf_test <- Seurat::FindClusters(seu_csf_test, resolution = res)
+    }
+    stability_res <- list()
+    for (k in resNames) {
+        stability_res[k] <- mclust::adjustedRandIndex(
+            seu_csf_train@meta.data[[k]],
+            seu_csf_test@meta.data[[k]]
+        )
+    }
+    return(unlist(stability_res))
 }
