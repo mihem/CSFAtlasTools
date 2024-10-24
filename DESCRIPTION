@@ -1,10 +1,10 @@
 Package: CSFAtlasTools
-Title: What the Package Does (One Line, Title Case)
+Title: Helper functions for the CSF Immune Atlas analysis.
 Version: 0.0.0.9000
 Authors@R: 
     person("Michael", "Heming", , "mhem@mailbox.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-9568-2790"))
-Description: Helper functions for the CSF Immune Atlas analysis.
+Description: This packages provides helper functions for the CSF Immune Atlas analysis. https://github.com/mihem/csf_immune_atlas
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
