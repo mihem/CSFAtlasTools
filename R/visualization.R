@@ -453,4 +453,3 @@ plotConfMat <- function(last_fit, name, metric_df, output_dir) {
     file_path <- file.path(output_dir, glue::glue("{name}_xgb_conf_mat.pdf"))
     ggplot2::ggsave(file_path, plot, width = 5, height = 5)
 }
-

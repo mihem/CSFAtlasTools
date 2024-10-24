@@ -222,3 +222,39 @@ test_that("stabilityCSF returns named vector", {
   expect_type(result, "double")
   expect_equal(length(result), 11)
 })
+################################################################################
+# test plotConfMat
+################################################################################
+
+test_that("plotConfMat creates a ggplot and saves it correctly", {
+    # Create a sample data frame
+    mtcars$cluster <- as.character(mtcars$am)
+    folds <- rsample::vfold_cv(mtcars, v = 2)
+    rec <- recipes::recipe(cluster ~ ., data = mtcars)
+    mod <- parsnip::logistic_reg()
+    control <- tune::control_resamples(save_pred = TRUE)
+    metrics <- yardstick::metric_set(
+        yardstick::accuracy,
+        yardstick::bal_accuracy,
+        yardstick::f_meas,
+        yardstick::roc_auc
+    )
+    res <- tune::fit_resamples(mod, rec, folds, control = control, metrics = metrics)
+    metric_df <- tune::collect_metrics(res)
+    metric_df$.estimate <- metric_df$mean
+
+    # Call the plotConfMat function
+    plotConfMat(res, name = "model", output_dir = ".", metric_df = metric_df)
+
+    # Test 1: Function creates a file in the specified directory
+    file_path <- file.path(".", "model_xgb_conf_mat.pdf")
+    expect_true(file.exists(file_path)) # Check if the file is created
+
+    # Test 2: Function creates a file that is not empty
+    expect_gt(file.info(file_path)$size, 0)
+
+    # Cleanup: Remove the generated file
+    if (file.exists(file_path)) {
+        file.remove(file_path)
+    }
+})
