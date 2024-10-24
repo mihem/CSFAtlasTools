@@ -406,3 +406,51 @@ stabilityCSF <- function(t, df, vars_cont, vars_cat, normal_estimate, weibull_es
     }
     return(unlist(stability_res))
 }
+
+################################################################################
+# function to plot confusion matrix
+################################################################################
+#' @title Plot confusion matrix
+#'
+#' @description This function plots the confusion matrix from a tuned
+#' xgboost model.
+#'
+#' @param last_fit The last fit from the tuning process.
+#' @param name A character string of the name of the model.
+#' @param metric_df A data frame containing the metric
+#' @param output_dir The directory to save the plot.
+#'
+#' @return A ggplot2 object.
+#'
+#' @examples
+#' set.seed(12)
+#' mtcars$cluster <- as.character(mtcars$am)
+#' folds <- rsample::vfold_cv(mtcars, v = 2)
+#' rec <- recipes::recipe(cluster ~ ., data = mtcars)
+#' mod <- parsnip::logistic_reg()
+#' control <- tune::control_resamples(save_pred = TRUE)
+#' metrics <- yardstick::metric_set(
+#'     yardstick::accuracy,
+#'     yardstick::bal_accuracy,
+#'     yardstick::f_meas,
+#'     yardstick::roc_auc
+#' )
+#' res <- tune::fit_resamples(mod, rec, folds, control = control, metrics = metrics)
+#' metric_df <- tune::collect_metrics(res)
+#' metric_df$.estimate <- metric_df$mean
+#' plotConfMat(res, name = "model", output_dir = ".", metric_df = metric_df)
+#' @export
+plotConfMat <- function(last_fit, name, metric_df, output_dir) {
+    plot <-
+        tune::collect_predictions(last_fit) |>
+        yardstick::conf_mat(truth = cluster, estimate = .pred_class) |>
+        ggplot2::autoplot(type = "heatmap") +
+        viridis::scale_fill_viridis() +
+        ggplot2::ggtitle(glue::glue("{name}
+     ROC AUC {signif(metric_df$.estimate,2)[4]},
+     BACC {signif(metric_df$.estimate,2)[2]}")) +
+        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.3))
+    file_path <- file.path(output_dir, glue::glue("{name}_xgb_conf_mat.pdf"))
+    ggplot2::ggsave(file_path, plot, width = 5, height = 5)
+}
+

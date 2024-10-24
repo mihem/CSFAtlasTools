@@ -27,7 +27,11 @@ Imports:
     Seurat,
     abind,
     datathin,
-    mclust
+    mclust,
+    tune,
+    yardstick
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    parsnip,
+    rsample
 Config/testthat/edition: 3
