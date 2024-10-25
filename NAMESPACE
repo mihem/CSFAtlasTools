@@ -2,6 +2,7 @@
 
 export(TimePlot)
 export(abundanceCategoryPlot)
+export(boxplot_cluster_manual)
 export(compBoxplot)
 export(compSex)
 export(corrPlot)

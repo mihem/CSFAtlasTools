@@ -579,3 +579,61 @@ TimePlot <- function(data, var, size, span) {
         ggplot2::geom_hline(yintercept = mean, linetype = "dashed", color = "blue")
     return(plot)
 }
+
+################################################################################
+# function to compare variables between clusters
+################################################################################
+#' @title Boxplot Cluster Manual
+#'
+#' @description This function creates a boxplot for a given test name and cluster, and saves the plot to a specified directory.
+#'
+#' @param data A data frame containing the data.
+#' @param test_name A character string representing the test name to be plotted.
+#' @param file_name A character string representing the file name for saving the plot.
+#' @param output_dir A character string representing the directory to save the plot.
+#'
+#' @return None. The function saves the plot to a file.
+#'
+#' @examples
+#' set.seed(1)
+#' data <- data.frame(
+#'     cluster = sample(letters[1:2], 100, replace = TRUE),
+#'     test1 = stats::rnorm(100),
+#'     test2 = stats::rnorm(100)
+#' )
+#' boxplot_cluster_manual(data, test_name = "test1", file_name = "example", output_dir = tempdir())
+#' @export
+boxplot_cluster_manual <- function(data, test_name, file_name, output_dir) {
+    formula <- paste0(test_name, "~", "cluster")
+    stat <-
+        data |>
+        stats::wilcox.test(stats::as.formula(formula), data = _) |>
+        broom::tidy() |>
+        dplyr::mutate(p.symbol = as.character(stats::symnum(p.value, corr = FALSE, na = FALSE, cutpoints = c(0, 0.001, 0.01, 0.05, 1), symbols = c("***", "**", "*", ""))))
+
+    stats_list <- vector("list")
+    stats_list$annotation <- stat$p.symbol
+    stats_list$comparisons[[1]] <- unique(data$cluster)
+
+    plot <-
+        data |>
+        ggplot2::ggplot(ggplot2::aes(x = cluster, y = .data[[test_name]], fill = cluster)) +
+        ggplot2::geom_boxplot() +
+        ggplot2::geom_jitter(width = 0.3, height = 0, size = .7, shape = 21, ggplot2::aes(fill = cluster)) +
+        ggplot2::theme_bw() +
+        ggplot2::xlab("") +
+        ggplot2::ylab(test_name) +
+        ggplot2::theme(legend.position = "none") +
+        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+        if (stat$p.value < 0.05) {
+            ggsignif::geom_signif(comparisons = stats_list$comparisons, annotation = stats_list$annotation, textsize = 5, step_increase = 0.05, vjust = 0.7)
+        }
+
+    file_path <- file.path(output_dir, glue::glue("patients_cluster_manual_{file_name}_{test_name}.pdf"))
+    ggplot2::ggsave(
+        file_path,
+        plot,
+        width = 2,
+        height = 5
+    )
+}
