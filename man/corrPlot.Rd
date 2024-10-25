@@ -34,6 +34,6 @@ plot_df <- data.frame(
     age = c(20, 30, 40),
     example_var = c(1, 2, 3)
 )
-output_dir <- "."
+output_dir <- tempdir()
 corrPlot(var, estimate_df, plot_df, output_dir)
 }

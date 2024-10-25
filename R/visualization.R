@@ -23,7 +23,7 @@
 #
 # category <- "category"
 # # Call the plot_category function
-# plot_category(data, category, width = 5, height = 5, output_dir = ".")
+# plot_category(data, category, width = 5, height = 5, output_dir = tempdir())
 # 
 # @export
 
@@ -80,7 +80,7 @@ plot_category <- function(data, category, width, height, output_dir) {
 #   height = 8,
 #   transform = FALSE,
 #   cutree_cols = 2,
-#   output_dir = "."
+#   output_dir = tempdir()
 # )
 # @export
 heatmap_group_csf <- function(category, data, label, cutree_rows, height, transform = FALSE, cutree_cols = 8, output_dir = NULL) {
@@ -145,7 +145,7 @@ heatmap_group_csf <- function(category, data, label, cutree_rows, height, transf
 #'
 #' # Define the cluster and output directory
 #' cluster <- "Cluster1"
-#' output_dir <- "."
+#' output_dir <- tempdir()
 #'
 #' # Call the abundanceCategoryPlot function
 #' abundanceCategoryPlot(data, cluster, output_dir)
@@ -206,7 +206,7 @@ abundanceCategoryPlot <- function(data, cluster, output_dir) {
 #'     age = c(20, 30, 40),
 #'     example_var = c(1, 2, 3)
 #' )
-#' output_dir <- "."
+#' output_dir <- tempdir()
 #' corrPlot(var, estimate_df, plot_df, output_dir)
 #' @export
 # individul correlation plots of top variables ----
@@ -257,7 +257,7 @@ corrPlot <- function(var, estimate_df, plot_df, output_dir) {
 #'     sex = c("M", "F", "M", "F", "M", "F"),
 #'     example_var = c(1, 9, 6, 5, 4, 3)
 #' )
-#' output_dir <- "."
+#' output_dir <- tempdir()
 #' compSex(var, estimate_df, plot_df, output_dir)
 #' @export
 compSex <- function(var, estimate_df, plot_df, output_dir) {
@@ -527,7 +527,7 @@ stabilityBlood <- function(t, df, vars_cont, normal_estimate, ndim) {
 #' res <- tune::fit_resamples(mod, rec, folds, control = control, metrics = metrics)
 #' metric_df <- tune::collect_metrics(res)
 #' metric_df$.estimate <- metric_df$mean
-#' plotConfMat(res, name = "model", output_dir = ".", metric_df = metric_df)
+#' plotConfMat(res, name = "model", output_dir = tempdir(), metric_df = metric_df)
 #' @export
 plotConfMat <- function(last_fit, name, metric_df, output_dir) {
     plot <-

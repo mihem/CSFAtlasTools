@@ -29,7 +29,7 @@ data <- data.frame(
 
 # Define the cluster and output directory
 cluster <- "Cluster1"
-output_dir <- "."
+output_dir <- tempdir()
 
 # Call the abundanceCategoryPlot function
 abundanceCategoryPlot(data, cluster, output_dir)

@@ -38,5 +38,5 @@ metrics <- yardstick::metric_set(
 res <- tune::fit_resamples(mod, rec, folds, control = control, metrics = metrics)
 metric_df <- tune::collect_metrics(res)
 metric_df$.estimate <- metric_df$mean
-plotConfMat(res, name = "model", output_dir = ".", metric_df = metric_df)
+plotConfMat(res, name = "model", output_dir = tempdir(), metric_df = metric_df)
 }

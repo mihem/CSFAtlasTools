@@ -33,6 +33,6 @@ plot_df <- data.frame(
     sex = c("M", "F", "M", "F", "M", "F"),
     example_var = c(1, 9, 6, 5, 4, 3)
 )
-output_dir <- "."
+output_dir <- tempdir()
 compSex(var, estimate_df, plot_df, output_dir)
 }
