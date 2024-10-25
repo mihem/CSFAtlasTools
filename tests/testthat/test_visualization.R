@@ -293,3 +293,29 @@ test_that("plotConfMat creates a ggplot and saves it correctly", {
         file.remove(file_path)
     }
 })
+
+################################################################################
+# test TimePlot
+################################################################################
+
+test_that("TimePlot works as expected", {
+  # Create a sample data frame
+  data <- data.frame(
+    measure_time = seq(1, 100, by = 1),
+    var1 = stats::rnorm(100),
+    var2 = stats::rnorm(100)
+  )
+
+  # Call the TimePlot function
+  plot <- TimePlot(data, var = "var1", size = 1, span = 0.5)
+
+  # Test 1: Check if the function returns a ggplot object
+  expect_true(ggplot2::is.ggplot(plot))
+
+  # Test 2: Check if the plot contains points
+  expect_true("GeomPoint" %in% sapply(plot$layers, function(layer) class(layer$geom)[1]))
+
+  # Test 3: Check if the plot contains a loess smooth line
+  expect_true("GeomSmooth" %in% sapply(plot$layers, function(layer) class(layer$geom)[1]))
+})
+
