@@ -31,6 +31,11 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+      - name: Install datathin from GitHub
+        run: |
+          install.packages('remotes')
+          remotes::install_github('anna-neufeld/datathin')
+        shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
