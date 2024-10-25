@@ -543,3 +543,39 @@ plotConfMat <- function(last_fit, name, metric_df, output_dir) {
     ggplot2::ggsave(file_path, plot, width = 5, height = 5)
 }
 
+################################################################################
+# function to plot variable over time
+################################################################################
+#' @title Time Plot
+#'
+#' @description This function creates a time plot for a given variable in the data.
+#'
+#' @param data A data frame containing the data.
+#' @param var A character string representing the variable to be plotted.
+#' @param size A numeric value representing the size of the points in the plot.
+#' @param span A numeric value representing the span for the loess smoothing.
+#'
+#' @return A ggplot2 object representing the time plot.
+#'
+#' @examples
+#' data <- data.frame(
+#'     measure_time = seq(1, 100, by = 1),
+#'     var1 = rnorm(100),
+#'     var2 = rnorm(100)
+#' )
+#' TimePlot(data, var = "var1", size = 1, span = 0.5)
+#' @export
+TimePlot <- function(data, var, size, span) {
+    mean <- base::mean(data[[var]], na.rm = TRUE)
+    plot <-
+        data |>
+        ggplot2::ggplot(ggplot2::aes(x = measure_time, y = .data[[var]])) +
+        ggplot2::geom_point(alpha = 0.3, size = size) +
+        ggplot2::theme_bw() +
+        ggplot2::xlab("") +
+        ggplot2::ylab("") +
+        ggplot2::geom_smooth(method = "loess", se = TRUE, span = span, fill = "#FA8A63", color = "#FE162A") +
+        ggplot2::ggtitle(var) +
+        ggplot2::geom_hline(yintercept = mean, linetype = "dashed", color = "blue")
+    return(plot)
+}
