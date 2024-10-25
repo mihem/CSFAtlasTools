@@ -222,6 +222,41 @@ test_that("stabilityCSF returns named vector", {
   expect_type(result, "double")
   expect_equal(length(result), 11)
 })
+
+################################################################################
+# Test stabilityBlood
+################################################################################
+test_that("stabilityBlood returns named vector", {
+  # Create example data
+  df <- data.frame(
+    a = rnorm(100, mean = 2, sd = 1),
+    b = rnorm(100, mean = 2, sd = 2),
+    c = rnorm(100, mean = 2, sd = 1),
+    d = rnorm(100, mean = 2, sd = 2),
+    e = rnorm(100, mean = 2, sd = 1)
+  )
+  vars_cont <- c("a", "b", "c", "d", "e")
+  normal_estimate <-
+    matrix(c(0.5, 0.1, 0.7, 0.2, 0.3),
+      nrow = nrow(df),
+      ncol = length(vars_cont)
+    )
+  ndim <- 2
+  suppressWarnings(
+    result <-
+      stabilityBlood(
+        t = 1,
+        df = df,
+        vars_cont = vars_cont,
+        normal_estimate = normal_estimate,
+        ndim = ndim
+      )
+  )
+  # Test
+  expect_type(result, "double")
+  expect_equal(length(result), 11)
+})
+
 ################################################################################
 # test plotConfMat
 ################################################################################
