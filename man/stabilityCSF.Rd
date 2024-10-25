@@ -37,6 +37,7 @@ This function calculates the stability of Seurat clustering
 at different resolutions.
 }
 \examples{
+set.seed(1)
 df <- data.frame(
     a = rnorm(100, mean = 2, sd = 1),
     b = rnorm(100, mean = 2, sd = 1),

@@ -1,31 +1,31 @@
 ################################################################################
 # Plot categories
 ################################################################################
-#' This function plots a category using ggplot2.
-#'
-#' @title Plot Category
-#' @description This function takes a data frame and a category column as input, 
-#'   and returns a ggplot2 plot of the category.
-#'
-#' @param data A data frame containing the category column.
-#' @param category The name of the category column in the data frame.
-#' @param width The width of the plot.
-#' @param height The height of the plot.
-#' @param output_dir The directory to save the plot.
-#'
-#' @return A ggplot2 plot object.
-#'
-#' @examples
-#' data <- data.frame(
-#'   category = c("A", "A", "B", "B", "C", "C"),
-#'   value = c(1, 2, 3, 4, 5, 6)
-#' )
-#'
-#' category <- "category"
-#' # Call the plot_category function
-#' plot_category(data, category, width = 5, height = 5, output_dir = ".")
-#' 
-#' @export
+# This function plots a category using ggplot2.
+#
+# @title Plot Category
+# @description This function takes a data frame and a category column as input, 
+#   and returns a ggplot2 plot of the category.
+#
+# @param data A data frame containing the category column.
+# @param category The name of the category column in the data frame.
+# @param width The width of the plot.
+# @param height The height of the plot.
+# @param output_dir The directory to save the plot.
+#
+# @return A ggplot2 plot object.
+#
+# @examples
+# data <- data.frame(
+#   category = c("A", "A", "B", "B", "C", "C"),
+#   value = c(1, 2, 3, 4, 5, 6)
+# )
+#
+# category <- "category"
+# # Call the plot_category function
+# plot_category(data, category, width = 5, height = 5, output_dir = ".")
+# 
+# @export
 
 plot_category <- function(data, category, width, height, output_dir) {
     plot <- dplyr::count(data, .data[[category]]) |>
@@ -49,40 +49,40 @@ plot_category <- function(data, category, width, height, output_dir) {
 # Plot grouped heatmap
 ################################################################################
 
-#' @title Grouped heatmap
-#' 
-#' @description Plot goruped heatmap and save to folder
-#' 
-#' @param category character string representing the category
-#' @param data data frame
-#' @param label character string representing the label
-#' @param cutree_rows numeric value representing the number of clusters the rows are divied into
-#' @param height numeric value representing the height of the heatmap
-#' @param transform boolean value representing if the data should be transposed
-#' @param cutree_cols numeric value representing the number of clusters the columns are divied into, default: 8
-#' @param output_dir character string representing the directory to save the heatmap.
-#' 
-#' @return save grouped heatmap to folder
-#' 
-#' @examples
-#' example_data <- tibble::tibble(
-#'   category = rep(c("A", "B", "C"), each = 3),
-#'   granulos = runif(9, 0, 10),
-#'   lactate = runif(9, 0, 5)
-#' )
-#' category <- "category"
-#' label <- "test_heatmap"
-#' heatmap_group_csf(
-#'   category = category,
-#'   data = example_data,
-#'   label = label,
-#'   cutree_rows = 3,
-#'   height = 8,
-#'   transform = FALSE,
-#'   cutree_cols = 2,
-#'   output_dir = "."
-#' )
-#' @export
+# @title Grouped heatmap
+# 
+# @description Plot goruped heatmap and save to folder
+# 
+# @param category character string representing the category
+# @param data data frame
+# @param label character string representing the label
+# @param cutree_rows numeric value representing the number of clusters the rows are divied into
+# @param height numeric value representing the height of the heatmap
+# @param transform boolean value representing if the data should be transposed
+# @param cutree_cols numeric value representing the number of clusters the columns are divied into, default: 8
+# @param output_dir character string representing the directory to save the heatmap.
+# 
+# @return save grouped heatmap to folder
+# 
+# @examples
+# example_data <- tibble::tibble(
+#   category = rep(c("A", "B", "C"), each = 3),
+#   granulos = runif(9, 0, 10),
+#   lactate = runif(9, 0, 5)
+# )
+# category <- "category"
+# label <- "test_heatmap"
+# heatmap_group_csf(
+#   category = category,
+#   data = example_data,
+#   label = label,
+#   cutree_rows = 3,
+#   height = 8,
+#   transform = FALSE,
+#   cutree_cols = 2,
+#   output_dir = "."
+# )
+# @export
 heatmap_group_csf <- function(category, data, label, cutree_rows, height, transform = FALSE, cutree_cols = 8, output_dir = NULL) {
     formula <- paste0(category, "~", ".")
     phmap_data_norm <- data |>
@@ -329,6 +329,7 @@ compBoxplot <- function(par, df) {
 #' @return A named vector of stability values.
 #' 
 #' @examples
+#' set.seed(1)
 #' df <- data.frame(
 #'     a = rnorm(100, mean = 2, sd = 1),
 #'     b = rnorm(100, mean = 2, sd = 1),
@@ -408,6 +409,94 @@ stabilityCSF <- function(t, df, vars_cont, vars_cat, normal_estimate, weibull_es
 }
 
 ################################################################################
+# stability metric blood
+################################################################################
+#' @title Stability metric for Blood
+#'
+#' @description This function calculates the stability of Seurat clustering
+#' at different resolutions for blood data.
+#'
+#' @param t The seed number for reproducibility.
+#' @param df The data frame containing the data for testing.
+#' @param vars_cont Continuous variables for datathin.
+#' @param normal_estimate Estimates for normally distributed parameters for datathin.
+#' @param ndim Number of dimensions for Seurat.
+#'
+#' @return A named vector of stability values.
+#'
+#' @examples
+#' set.seed(1)
+#' df <- data.frame(
+#'     a = stats::rnorm(100, mean = 2, sd = 1),
+#'     b = stats::rnorm(100, mean = 2, sd = 2),
+#'     c = stats::rnorm(100, mean = 2, sd = 1),
+#'     d = stats::rnorm(100, mean = 2, sd = 2),
+#'     e = stats::rnorm(100, mean = 2, sd = 1)
+#' )
+#' vars_cont <- c("a", "b", "c", "d", "e")
+#' normal_estimate <-
+#'     matrix(c(0.5, 0.1, 0.7, 0.2, 0.3),
+#'         nrow = nrow(df),
+#'         ncol = length(vars_cont)
+#'     )
+#' ndim <- 2
+#' stabilityBlood(
+#'      t = 1,
+#'      df = df,
+#'      vars_cont = vars_cont,
+#'      normal_estimate = normal_estimate,
+#'      ndim = ndim
+#' )
+#' @export
+stabilityBlood <- function(t, df, vars_cont, normal_estimate, ndim) {
+    # Set the seed for reproducibility
+    set.seed(t)
+    
+    # Create the data
+    data_thin <- datathin::datathin(df[vars_cont], family = "normal", K = 2, arg = normal_estimate)
+    data_train <- data_thin[, , 1]
+    data_test <- data_thin[, , 2]
+    
+    # Create the Seurat objects
+    seu_blood_train <- Seurat::CreateSeuratObject(t(data_train))
+    seu_blood_test <- Seurat::CreateSeuratObject(t(data_test))
+    
+    # Preprocess the data
+    seu_blood_train$RNA$data <- seu_blood_train$RNA$counts
+    seu_blood_test$RNA$data <- seu_blood_test$RNA$counts
+
+    seu_blood_train <- seu_blood_train |>
+        Seurat::FindVariableFeatures() |>
+        Seurat::ScaleData() |>
+        Seurat::RunPCA() |>
+        Seurat::FindNeighbors(dims = 1:ndim)
+
+    seu_blood_test <- seu_blood_test |>
+        Seurat::FindVariableFeatures() |>
+        Seurat::ScaleData() |>
+        Seurat::RunPCA() |>
+        Seurat::FindNeighbors(dims = 1:ndim)
+    
+    # Calculate the stability at different resolutions
+    resRange <- seq(0.2, 1.2, by = 0.1)
+    resNames <- paste0("RNA_snn_res.", resRange)
+    for (res in resRange) {
+        seu_blood_train <- Seurat::FindClusters(seu_blood_train, resolution = res)
+    }
+    for (res in resRange) {
+        seu_blood_test <- Seurat::FindClusters(seu_blood_test, resolution = res)
+    }
+    stability_res <- list()
+    for (k in resNames) {
+        stability_res[k] <- mclust::adjustedRandIndex(
+            seu_blood_train@meta.data[[k]],
+            seu_blood_test@meta.data[[k]]
+        )
+    }
+    return(unlist(stability_res))
+}
+
+################################################################################
 # function to plot confusion matrix
 ################################################################################
 #' @title Plot confusion matrix
@@ -453,3 +542,4 @@ plotConfMat <- function(last_fit, name, metric_df, output_dir) {
     file_path <- file.path(output_dir, glue::glue("{name}_xgb_conf_mat.pdf"))
     ggplot2::ggsave(file_path, plot, width = 5, height = 5)
 }
+

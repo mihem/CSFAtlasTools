@@ -1,5 +1,5 @@
 Package: CSFAtlasTools
-Title: Helper functions for the CSF Immune Atlas analysis.
+Title: Helper functions for the CSF Immune Atlas analysis
 Version: 0.0.0.9000
 Authors@R: 
     person("Michael", "Heming", , "mhem@mailbox.org", role = c("aut", "cre"),
