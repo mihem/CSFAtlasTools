@@ -300,6 +300,7 @@ test_that("plotConfMat creates a ggplot and saves it correctly", {
 
 test_that("timePlot works as expected", {
   # Create a sample data frame
+  set.seed(1)
   data <- data.frame(
     measure_time = seq(1, 100, by = 1),
     var1 = stats::rnorm(100),
