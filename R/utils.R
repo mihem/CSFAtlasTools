@@ -120,6 +120,7 @@ lm_age <- function(data, variable) {
 #'   value = c(10.1, 20.3, 30.5, 40.7, 50.9, 60.1, 70.3, 80.5, 90.7, 100.9),
 #'   sex = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F")
 #' )
+#' wilcox_akp_test(df, var = "value")
 #' @export
 wilcox_akp_test <- function(data, var) {
   if (!is.numeric(data[[var]])) {
