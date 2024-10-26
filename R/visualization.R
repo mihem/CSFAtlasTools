@@ -4,7 +4,7 @@
 # This function plots a category using ggplot2.
 #
 # @title Plot Category
-# @description This function takes a data frame and a category column as input, 
+# @description This function takes a data frame and a category column as input,
 #   and returns a ggplot2 plot of the category.
 #
 # @param data A data frame containing the category column.
@@ -24,7 +24,7 @@
 # category <- "category"
 # # Call the plot_category function
 # plot_category(data, category, width = 5, height = 5, output_dir = tempdir())
-# 
+#
 # @export
 
 plot_category <- function(data, category, width, height, output_dir) {
@@ -50,9 +50,9 @@ plot_category <- function(data, category, width, height, output_dir) {
 ################################################################################
 
 # @title Grouped heatmap
-# 
+#
 # @description Plot goruped heatmap and save to folder
-# 
+#
 # @param category character string representing the category
 # @param data data frame
 # @param label character string representing the label
@@ -61,9 +61,9 @@ plot_category <- function(data, category, width, height, output_dir) {
 # @param transform boolean value representing if the data should be transposed
 # @param cutree_cols numeric value representing the number of clusters the columns are divied into, default: 8
 # @param output_dir character string representing the directory to save the heatmap.
-# 
+#
 # @return save grouped heatmap to folder
-# 
+#
 # @examples
 # example_data <- tibble::tibble(
 #   category = rep(c("A", "B", "C"), each = 3),
@@ -263,7 +263,7 @@ corrPlot <- function(var, estimate_df, plot_df, output_dir) {
 compSex <- function(var, estimate_df, plot_df, output_dir) {
     # Filter the estimates data frame for the given variable
     result <- dplyr::filter(estimate_df, var == {{ var }})
-    
+
     # Create a boxplot comparing the variable between sexes
     plot <- plot_df |>
         ggplot2::ggplot(ggplot2::aes(x = sex, y = .data[[var]])) +
@@ -274,7 +274,7 @@ compSex <- function(var, estimate_df, plot_df, output_dir) {
             subtitle = paste0("effect: ", signif(result$akp_effect, 2), ", adjusted p: ", signif(result$p_adjust, 2))
         ) +
         ggplot2::ylab("")
-    
+
     # Construct the file path and save the plot
     file_path <- file.path(output_dir, glue::glue("correlation_stat_sex_regress_{var}.pdf"))
     ggplot2::ggsave(file_path, plot, width = 3, height = 4)
@@ -285,14 +285,14 @@ compSex <- function(var, estimate_df, plot_df, output_dir) {
 ################################################################################
 
 #' @title Compare via boxplots
-#' 
+#'
 #' @description This function creates a boxplot to compare a parameter between groups.
-#' 
+#'
 #' @param par A character string representing the parameter to be plotted.
 #' @param df A data frame containing the data for plotting.
-#' 
+#'
 #' @return A ggplot2 plot.
-#' 
+#'
 #' @examples
 #' par <- "example_par"
 #' df <- data.frame(
@@ -314,10 +314,10 @@ compBoxplot <- function(par, df) {
 # stability metric CSF
 ################################################################################
 #' @title Stability metric for CSF
-#' 
+#'
 #' @description This function calculates the stability of Seurat clustering
 #' at different resolutions.
-#' 
+#'
 #' @param t The seed number for reproducibility.
 #' @param df The data frame containing the data for testing.
 #' @param vars_cont Continuous variables for datathin.
@@ -325,9 +325,9 @@ compBoxplot <- function(par, df) {
 #' @param normal_estimate Estimates for normally distributed parameters for datathin.
 #' @param weibull_estimate Estimates for weibull distributed parameters for datathin.
 #' @param ndim Number of dimensions for Seurat
-#' 
+#'
 #' @return A named vector of stability values.
-#' 
+#'
 #' @examples
 #' set.seed(1)
 #' df <- data.frame(
@@ -351,19 +351,19 @@ compBoxplot <- function(par, df) {
 #'     )
 #' ndim <- 2
 #' stabilityCSF(
-#'      t = 1,
-#'      df = df,
-#'      vars_cont = vars_cont,
-#'      vars_cat = vars_cat,
-#'      normal_estimate = normal_estimate,
-#'      weibull_estimate = weibull_estimate,
-#'      ndim = ndim
+#'     t = 1,
+#'     df = df,
+#'     vars_cont = vars_cont,
+#'     vars_cat = vars_cat,
+#'     normal_estimate = normal_estimate,
+#'     weibull_estimate = weibull_estimate,
+#'     ndim = ndim
 #' )
 #' @export
 stabilityCSF <- function(t, df, vars_cont, vars_cat, normal_estimate, weibull_estimate, ndim) {
     # Set the seed for reproducibility
     set.seed(t)
-    
+
     # Create the data
     data_thin1 <- datathin::datathin(df[vars_cont], family = "normal", K = 2, arg = normal_estimate)
     set.seed(t)
@@ -371,11 +371,11 @@ stabilityCSF <- function(t, df, vars_cont, vars_cat, normal_estimate, weibull_es
     data_thin <- abind::abind(data_thin1, data_thin2, along = 2)
     data_train <- data_thin[, , 1]
     data_test <- data_thin[, , 2]
-    
+
     # Create the Seurat objects
     seu_csf_train <- Seurat::CreateSeuratObject(t(data_train))
     seu_csf_test <- Seurat::CreateSeuratObject(t(data_test))
-    
+
     # Preprocess the data
     seu_csf_train$RNA$data <- seu_csf_train$RNA$counts
     seu_csf_test$RNA$data <- seu_csf_test$RNA$counts
@@ -441,26 +441,26 @@ stabilityCSF <- function(t, df, vars_cont, vars_cat, normal_estimate, weibull_es
 #'     )
 #' ndim <- 2
 #' stabilityBlood(
-#'      t = 1,
-#'      df = df,
-#'      vars_cont = vars_cont,
-#'      normal_estimate = normal_estimate,
-#'      ndim = ndim
+#'     t = 1,
+#'     df = df,
+#'     vars_cont = vars_cont,
+#'     normal_estimate = normal_estimate,
+#'     ndim = ndim
 #' )
 #' @export
 stabilityBlood <- function(t, df, vars_cont, normal_estimate, ndim) {
     # Set the seed for reproducibility
     set.seed(t)
-    
+
     # Create the data
     data_thin <- datathin::datathin(df[vars_cont], family = "normal", K = 2, arg = normal_estimate)
     data_train <- data_thin[, , 1]
     data_test <- data_thin[, , 2]
-    
+
     # Create the Seurat objects
     seu_blood_train <- Seurat::CreateSeuratObject(t(data_train))
     seu_blood_test <- Seurat::CreateSeuratObject(t(data_test))
-    
+
     # Preprocess the data
     seu_blood_train$RNA$data <- seu_blood_train$RNA$counts
     seu_blood_test$RNA$data <- seu_blood_test$RNA$counts
@@ -476,7 +476,7 @@ stabilityBlood <- function(t, df, vars_cont, normal_estimate, ndim) {
         Seurat::ScaleData() |>
         Seurat::RunPCA() |>
         Seurat::FindNeighbors(dims = 1:ndim)
-    
+
     # Calculate the stability at different resolutions
     resRange <- seq(0.2, 1.2, by = 0.1)
     resNames <- paste0("RNA_snn_res.", resRange)
