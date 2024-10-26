@@ -32,7 +32,7 @@ test_that("scale_this works correctly", {
     x <- rep(0, 10)
     expect_equal(scale_this(x), as.vector(scale(x)))
     
-    # # test 4: scale a vector with a mean of 1 and a standard deviation of 0
+    # # test 4: throw an error if the input is not numeric
     x <- c("1")
     expect_error(scale_this(x), "Input must be numeric")
 })
