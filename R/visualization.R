@@ -558,6 +558,7 @@ plotConfMat <- function(last_fit, name, metric_df, output_dir) {
 #' @return A ggplot2 object representing the time plot.
 #'
 #' @examples
+#' set.seed(1)
 #' data <- data.frame(
 #'     measure_time = seq(1, 100, by = 1),
 #'     var1 = rnorm(100),
