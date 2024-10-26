@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-10-26T10:48Z
+last_built: 2024-10-26T12:21Z
 urls:
   reference: https://mihem.github.io/CSFAtlasTools/reference
   article: https://mihem.github.io/CSFAtlasTools/articles
