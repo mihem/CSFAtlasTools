@@ -295,10 +295,10 @@ test_that("plotConfMat creates a ggplot and saves it correctly", {
 })
 
 ################################################################################
-# test TimePlot
+# test timePlot
 ################################################################################
 
-test_that("TimePlot works as expected", {
+test_that("timePlot works as expected", {
   # Create a sample data frame
   data <- data.frame(
     measure_time = seq(1, 100, by = 1),
@@ -306,8 +306,8 @@ test_that("TimePlot works as expected", {
     var2 = stats::rnorm(100)
   )
 
-  # Call the TimePlot function
-  plot <- TimePlot(data, var = "var1", size = 1, span = 0.5)
+  # Call the timePlot function
+  plot <- timePlot(data, var = "var1", size = 1, span = 0.5)
 
   # Test 1: Check if the function returns a ggplot object
   expect_true(ggplot2::is.ggplot(plot))

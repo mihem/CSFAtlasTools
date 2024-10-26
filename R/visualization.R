@@ -563,9 +563,9 @@ plotConfMat <- function(last_fit, name, metric_df, output_dir) {
 #'     var1 = rnorm(100),
 #'     var2 = rnorm(100)
 #' )
-#' TimePlot(data, var = "var1", size = 1, span = 0.5)
+#' timePlot(data, var = "var1", size = 1, span = 0.5)
 #' @export
-TimePlot <- function(data, var, size, span) {
+timePlot <- function(data, var, size, span) {
     mean <- base::mean(data[[var]], na.rm = TRUE)
     plot <-
         data |>

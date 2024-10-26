@@ -112,7 +112,7 @@ lm_age <- function(data, variable) {
 #'   sex = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F")
 #' )
 #' @export
-my_wilcox_test <- function(data, var) {
+wilcox_akp_test <- function(data, var) {
   if (!is.numeric(data[[var]])) {
     stop("var must be numeric")
   }

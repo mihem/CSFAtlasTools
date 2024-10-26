@@ -57,10 +57,10 @@ test_that("lm_age generates a tidy data frame", {
 })
 
 ################################################################################
-# my_wilcox_test
+# wilcox_akp_test
 ################################################################################
 
-test_that("my_wilcox_test works correctly", {
+test_that("wilcox_akp_test works correctly", {
   # Create example data
   df <- data.frame(
     value = c(10.1, 20.3, 30.5, 40.7, 50.9, 60.1, 70.3, 80.5, 90.7, 100.9),
@@ -70,7 +70,7 @@ test_that("my_wilcox_test works correctly", {
   df$sex_numeric <- sample(0:1, 10, replace = TRUE)
 
   # Run the test
-  test_result <- my_wilcox_test(df, var = "value")
+  test_result <- wilcox_akp_test(df, var = "value")
 
   # Test 1: The output is a data frame
   expect_s3_class(test_result, "tbl_df")
@@ -79,8 +79,8 @@ test_that("my_wilcox_test works correctly", {
   # Test 3: The output has the correct number of rows
   expect_equal(nrow(test_result), 1)
   # Test 4 expected error if var is not numeric
-  expect_error(my_wilcox_test(df, var = "value_char"), "var must be numeric")
+  expect_error(wilcox_akp_test(df, var = "value_char"), "var must be numeric")
   # Test 5 expected error if sex is not a character
   df$sex <- sample(0:1, 10, replace = TRUE)
-  expect_error(my_wilcox_test(df, var = "value"), "sex must be character")
+  expect_error(wilcox_akp_test(df, var = "value"), "sex must be character")
 })
