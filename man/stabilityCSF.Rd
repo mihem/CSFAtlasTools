@@ -59,12 +59,12 @@ weibull_estimate <-
     )
 ndim <- 2
 stabilityCSF(
-     t = 1,
-     df = df,
-     vars_cont = vars_cont,
-     vars_cat = vars_cat,
-     normal_estimate = normal_estimate,
-     weibull_estimate = weibull_estimate,
-     ndim = ndim
+    t = 1,
+    df = df,
+    vars_cont = vars_cont,
+    vars_cat = vars_cat,
+    normal_estimate = normal_estimate,
+    weibull_estimate = weibull_estimate,
+    ndim = ndim
 )
 }

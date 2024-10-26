@@ -18,5 +18,7 @@ save categories to folder \verb{/analysis/relative/categories/}
 count categories and save as csv
 }
 \examples{
-\dontrun{lapply(sel_categories, count_category, data = combined_complete)}
+\dontrun{
+lapply(sel_categories, count_category, data = combined_complete)
+}
 }

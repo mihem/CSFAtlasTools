@@ -41,10 +41,10 @@ normal_estimate <-
     )
 ndim <- 2
 stabilityBlood(
-     t = 1,
-     df = df,
-     vars_cont = vars_cont,
-     normal_estimate = normal_estimate,
-     ndim = ndim
+    t = 1,
+    df = df,
+    vars_cont = vars_cont,
+    normal_estimate = normal_estimate,
+    ndim = ndim
 )
 }
