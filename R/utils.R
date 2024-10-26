@@ -7,15 +7,24 @@
 #' @param data data frame
 #' @param category character string representing the category
 #' @return save categories to folder `/analysis/relative/categories/`
-#' @examples \dontrun{
-#' lapply(sel_categories, count_category, data = combined_complete)
-#' }
+#' @examples
+#' @examples
+#' df <- data.frame(
+#'   category = c("A", "B", "A", "C", "B", "A"),
+#'   value = 1:6
+#' )
+#'
+#' temp_dir <- tempdir()
+#'
+#' count_category(df, "category", temp_dir)
+#'
 #' @export
-count_category <- function(data, category) {
+count_category <- function(data, category, output_dir) {
+  file_path <- file.path(output_dir, glue::glue("count_{category}.csv"))
   data |>
     dplyr::count(.data[[category]]) |>
     dplyr::arrange(dplyr::desc(n)) |>
-    readr::write_csv(file.path("analysis", "relative", "categories", glue::glue("count_{category}.csv")))
+    readr::write_csv(file_path)
 }
 
 ################################################################################
