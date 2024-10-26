@@ -84,3 +84,35 @@ test_that("wilcox_akp_test works correctly", {
   df$sex <- sample(0:1, 10, replace = TRUE)
   expect_error(wilcox_akp_test(df, var = "value"), "sex must be character")
 })
+
+################################################################################
+# count_category
+################################################################################
+test_that("count_category works correctly", {
+  # Create example data
+  df <- data.frame(
+    category = c("A", "B", "A", "C", "B", "A"),
+    value = 1:6
+  )
+  
+  # Create a temporary directory for output
+  output_dir <- "."
+  
+  # Run the function
+  count_category(df, "category", output_dir)
+  
+  # Check if the file was created
+  file_path <- file.path(output_dir, "count_category.csv")
+  expect_true(file.exists(file_path))
+  
+  # Read the file and check its contents
+  result <- read.csv(file_path)
+  expected_result <- data.frame(
+    category = c("A", "B", "C"),
+    n = c(3, 2, 1)
+  )
+  expect_equal(result, expected_result)
+  
+  # Clean up
+  file.remove(file_path)
+})
