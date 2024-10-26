@@ -113,6 +113,12 @@ lm_age <- function(data, variable) {
 #' )
 #' @export
 my_wilcox_test <- function(data, var) {
+  if (!is.numeric(data[[var]])) {
+    stop("var must be numeric")
+  }
+  if (!is.character(data[["sex"]])) {
+    stop("sex must be character")
+  }
   # Create the formula for the Wilcoxon test
   my_formula <- paste0(var, "~ sex")
 

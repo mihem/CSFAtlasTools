@@ -66,6 +66,8 @@ test_that("my_wilcox_test works correctly", {
     value = c(10.1, 20.3, 30.5, 40.7, 50.9, 60.1, 70.3, 80.5, 90.7, 100.9),
     sex = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F")
   )
+  df$value_char <- as.character(df$value)
+  df$sex_numeric <- sample(0:1, 10, replace = TRUE)
 
   # Run the test
   test_result <- my_wilcox_test(df, var = "value")
@@ -76,5 +78,9 @@ test_that("my_wilcox_test works correctly", {
   expect_equal(names(test_result), c("statistic", "p.value", "method", "alternative", "akp_effect"))
   # Test 3: The output has the correct number of rows
   expect_equal(nrow(test_result), 1)
+  # Test 4 expected error if var is not numeric
+  expect_error(my_wilcox_test(df, var = "value_char"), "var must be numeric")
+  # Test 5 expected error if sex is not a character
+  df$sex <- sample(0:1, 10, replace = TRUE)
+  expect_error(my_wilcox_test(df, var = "value"), "sex must be character")
 })
-# Create a sample dataframe
