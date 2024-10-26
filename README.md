@@ -6,7 +6,7 @@ This repository contains helper function for the analysis of cerebrospinal fluid
 To install the package, use:
 
 ```R
-remotes::install_github("mihem/csf_atlas_tools")
+remotes::install_github("mihem/CSFAtlasTools")
 ```
 
 # Contact
