@@ -22,6 +22,7 @@ A ggplot2 object representing the time plot.
 This function creates a time plot for a given variable in the data.
 }
 \examples{
+set.seed(1)
 data <- data.frame(
     measure_time = seq(1, 100, by = 1),
     var1 = rnorm(100),

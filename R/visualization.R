@@ -172,6 +172,7 @@ abundanceCategoryPlot <- function(data, cluster, output_dir) {
     file_path <- file.path(output_dir, glue::glue("barplot_soupx_{data_quo}_cluster_{cluster}.pdf"))
 
     ggplot2::ggsave(file.path(file_path),
+        plot,
         width = 6,
         height = height,
         device = grDevices::cairo_pdf

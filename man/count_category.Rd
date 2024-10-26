@@ -4,12 +4,14 @@
 \alias{count_category}
 \title{Count categories}
 \usage{
-count_category(data, category)
+count_category(data, category, output_dir)
 }
 \arguments{
 \item{data}{data frame}
 
 \item{category}{character string representing the category}
+
+\item{output_dir}{character string representing the output directory}
 }
 \value{
 save categories to folder \verb{/analysis/relative/categories/}
@@ -18,7 +20,13 @@ save categories to folder \verb{/analysis/relative/categories/}
 count categories and save as csv
 }
 \examples{
-\dontrun{
-lapply(sel_categories, count_category, data = combined_complete)
-}
+df <- data.frame(
+  category = c("A", "B", "A", "C", "B", "A"),
+  value = 1:6
+)
+
+temp_dir <- tempdir()
+
+count_category(df, "category", temp_dir)
+
 }

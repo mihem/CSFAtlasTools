@@ -6,8 +6,8 @@
 #' @description count categories and save as csv
 #' @param data data frame
 #' @param category character string representing the category
+#' @param output_dir character string representing the output directory
 #' @return save categories to folder `/analysis/relative/categories/`
-#' @examples
 #' @examples
 #' df <- data.frame(
 #'   category = c("A", "B", "A", "C", "B", "A"),
