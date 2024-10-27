@@ -24,9 +24,15 @@ This function creates a boxplot for a given test name and cluster, and saves the
 \examples{
 set.seed(1)
 data <- data.frame(
-    cluster = sample(letters[1:2], 100, replace = TRUE),
-    test1 = stats::rnorm(100),
-    test2 = stats::rnorm(100)
+    cluster = rep(letters[1:2], each = 50),
+    test1 = c(stats::rnorm(50, mean = 1, sd = 1), stats::rnorm(50, mean = 2, sd = 1)),
+    test2 = stats::rnorm(100, mean = 2, sd = 1)
 )
-boxplot_cluster_manual(data, test_name = "test1", file_name = "example", output_dir = tempdir())
+test_name <- "test1"
+file_name <- "example"
+output_dir <- tempdir()
+
+# Call the boxplot_cluster_manual function
+boxplot_cluster_manual(data, test_name, file_name, output_dir)
+
 }

@@ -319,3 +319,34 @@ test_that("timePlot works as expected", {
   # Test 3: Check if the plot contains a loess smooth line
   expect_true("GeomSmooth" %in% sapply(plot$layers, function(layer) class(layer$geom)[1]))
 })
+
+################################################################################
+# Test boxplot_cluster_manual
+################################################################################
+test_that("boxplot_cluster_manual works correctly", {
+  # Create a sample data frame
+  set.seed(1)
+  data <- data.frame(
+    cluster = rep(letters[1:2], each = 50),
+    test1 = c(stats::rnorm(50, mean = 1, sd = 1), stats::rnorm(50, mean = 2, sd = 1)),
+    test2 = stats::rnorm(100, mean = 2, sd = 1)
+  )
+  test_name <- "test1"
+  file_name <- "example"
+  output_dir <- "."
+
+  # Call the boxplot_cluster_manual function
+  boxplot_cluster_manual(data, test_name, file_name, output_dir)
+
+  # Test 1: Function creates a file in the specified directory
+  file_path <- file.path(output_dir, glue::glue("patients_cluster_manual_{file_name}_{test_name}.pdf"))
+  expect_true(file.exists(file_path)) # Check if the file is created
+
+  # Test 2: Function creates a file that is not empty
+  expect_gt(file.info(file_path)$size, 0)
+
+  # Cleanup: Remove the generated file
+  if (file.exists(file_path)) {
+    file.remove(file_path)
+  }
+})
